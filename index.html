@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>中文默書大挑戰</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:20px;
+
+    background:
+    linear-gradient(
+    180deg,
+    #8ed1fc 0%,
+    #b8e6ff 40%,
+    #fff3b0 100%);
+
+    font-family:
+    "DFKai-SB",
+    "BiauKai",
+    "標楷體",
+    serif;
+
+    min-height:100vh;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.title{
+    text-align:center;
+    color:#ff4d6d;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    text-align:center;
+    font-size:24px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h2{
+    color:#2563eb;
+    margin-top:0;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+input, textarea{
+    width:100%;
+    padding:12px;
+    border:3px solid #cbd5e1;
+    border-radius:15px;
+    font-size:28px;
+    font-family:
+    "DFKai-SB",
+    "BiauKai",
+    "標楷體",
+    serif;
+}
+
+textarea{
+    resize:none;
+}
+
+button{
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:20px;
+    font-size:30px;
+    cursor:pointer;
+    background:#22c55e;
+    color:white;
+    font-family:
+    "DFKai-SB",
+    "BiauKai",
+    "標楷體",
+    serif;
+}
+
+button:hover{
+    background:#16a34a;
+}
+
+.result{
+    margin-top:25px;
+    text-align:center;
+    font-size:32px;
+}
+
+.star{
+    font-size:36px;
+    animation:spin 1.5s infinite;
+}
+
+@keyframes spin{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+}
+
+.fireworks{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.firework{
+    position:absolute;
+    font-size:40px;
+    animation:boom 2s ease-out forwards;
+}
+
+@keyframes boom{
+    from{
+        opacity:1;
+        transform:translateY(0) scale(0.3);
+    }
+    to{
+        opacity:0;
+        transform:translateY(-250px) scale(1.8);
+    }
+}
+
+.ribbon{
+    background:#fef08a;
+    border-radius:20px;
+    padding:10px;
+    text-align:center;
+    font-size:24px;
+    margin-bottom:20px;
+}
+
+.small{
+    font-size:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">🌈 中文默書大挑戰 🌈</div>
+
+<div class="subtitle">
+🐰 努力完成所有關卡，爭取做中文小狀元！
+</div>
+
+<div class="ribbon">
+✍️ 請家長讀出題目，小朋友輸入答案
+</div>
+
+<div class="card">
+
+<h2>甲：詞語（10分）</h2>
+
+<div class="grid">
+
+<input id="w1" placeholder="1">
+<input id="w2" placeholder="2">
+<input id="w3" placeholder="3">
+<input id="w4" placeholder="4">
+<input id="w5" placeholder="5">
+<input id="w6" placeholder="6">
+<input id="w7" placeholder="7">
+<input id="w8" placeholder="8">
+<input id="w9" placeholder="9">
+<input id="w10" placeholder="10">
+
+</div>
+
+<div class="small" style="margin-top:15px">
+（你、早、吹、飛、游、風、長大、老師、書包、天空）
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>乙：句子（10分）</h2>
+
+<textarea
+id="sentence"
+rows="3"
+placeholder="請輸入完整句子">
+</textarea>
+
+<div class="small">
+句子：我們是小學生。
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>⭐ 丙：加分題（10分）</h2>
+
+<div class="grid">
+
+<input id="n1" placeholder="1">
+<input id="n2" placeholder="2">
+<input id="n3" placeholder="3">
+<input id="n4" placeholder="4">
+<input id="n5" placeholder="5">
+<input id="n6" placeholder="6">
+<input id="n7" placeholder="7">
+<input id="n8" placeholder="8">
+<input id="n9" placeholder="9">
+<input id="n10" placeholder="10">
+
+</div>
+
+<div class="small" style="margin-top:15px">
+（一、二、三、四、五、六、七、八、九、十）
+</div>
+
+</div>
+
+<button onclick="checkAnswers()">
+🎯 檢查答案
+</button>
+
+<div id="result" class="result"></div>
+
+<div id="fireworks" class="fireworks"></div>
+
+</div>
+
+<script>
+
+const words=[
+"你","早","吹","飛","游",
+"風","長大","老師","書包","天空"
+];
+
+const numbers=[
+"一","二","三","四","五",
+"六","七","八","九","十"
+];
+
+function checkAnswers(){
+
+let score=0;
+
+for(let i=1;i<=10;i++){
+
+const value=document
+.getElementById("w"+i)
+.value.trim();
+
+if(value===words[i-1]){
+score++;
+}
+}
+
+const sentence=
+document
+.getElementById("sentence")
+.value
+.trim()
+.replace(/[。.]$/,"");
+
+if(sentence==="我們是小學生"){
+score+=10;
+}
+
+for(let i=1;i<=10;i++){
+
+const value=document
+.getElementById("n"+i)
+.value.trim();
+
+if(value===numbers[i-1]){
+score++;
+}
+}
+
+let title="";
+
+if(score===30){
+title="👑 中文小狀元";
+launchFireworks();
+}
+else if(score>=25){
+title="🌟 中文小博士";
+}
+else if(score>=20){
+title="🎖 中文小高手";
+}
+else if(score>=10){
+title="👍 繼續努力";
+}
+else{
+title="💪 再接再厲";
+}
+
+let stars="";
+
+for(let i=0;i<Math.floor(score/3);i++){
+stars+="⭐";
+}
+
+document.getElementById("result").innerHTML=
+`
+<div>${title}</div>
+<div style="margin-top:15px">
+得分：${score} / 30
+</div>
+<div style="margin-top:15px" class="star">
+${stars}
+</div>
+`;
+
+}
+
+function launchFireworks(){
+
+const area=document.getElementById("fireworks");
+
+area.innerHTML="";
+
+for(let i=0;i<25;i++){
+
+const fire=document.createElement("div");
+
+fire.className="firework";
+
+fire.innerHTML=
+["🎉","✨","🎊","⭐"][Math.floor(Math.random()*4)];
+
+fire.style.left=
+Math.random()*100+"%";
+
+fire.style.top=
+(50+Math.random()*40)+"%";
+
+area.appendChild(fire);
+}
+
+setTimeout(()=>{
+area.innerHTML="";
+},2500);
+
+}
+
+</script>
+
+</body>
+</html>
